@@ -7,39 +7,29 @@ import java.util.regex.Pattern;
 
 public class JsonParser {
     private static final Pattern REGEX_ITEMS = Pattern.compile(".*\\[(.+)\\].*");
-    private static final Pattern REGEX_ATRIBUTOS_JSON = Pattern.compile("\"(.+?)\":\"(.*?)\"");
+    private static final Pattern REGEX_JSON_ATTRIBUTES = Pattern.compile("\"(.+?)\":\"(.*?)\"");
     
     public List<Map<String, String>> parse(String json) {
-
         Matcher matcher = REGEX_ITEMS.matcher(json);
+        
         if (!matcher.find()) {
-
-            throw new IllegalArgumentException("Não encontrou items.");
+            throw new IllegalArgumentException("Did not find files");
         }
 
         String[] items = matcher.group(1).split("\\},\\{");
-
-        List<Map<String, String>> dados = new ArrayList<>();
+        List<Map<String, String>> data = new ArrayList<>();
 
         for (String item : items) {
+            Map<String, String> itemAttributes = new HashMap<>();
+            Matcher matcherJsonAttributes = REGEX_JSON_ATTRIBUTES.matcher(item);
 
-            Map<String, String> atributosItem = new HashMap<>();
-
-            Matcher matcherAtributosJson = REGEX_ATRIBUTOS_JSON.matcher(item);
-            while (matcherAtributosJson.find()) {
-                String atributo = matcherAtributosJson.group(1);
-                String valor = matcherAtributosJson.group(2);
-                atributosItem.put(atributo, valor);
+            while (matcherJsonAttributes.find()) {
+                String atributo = matcherJsonAttributes.group(1);
+                String valor = matcherJsonAttributes.group(2);
+                itemAttributes.put(atributo, valor);
             }
-            dados.add(atributosItem);
+            data.add(itemAttributes);
         }
-        return dados;
-
-    }
-
-    public static void main(String[] args) throws Exception {
-        String texto1 = "https://m.media-amazon.com/images/M/MV5BMGZmYmQ5NGQtNWQ1MC00NWZlLTg0MjYtYjJjMzQ5ODgxYzRkXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_Ratio0.7015_AL_.jpg";
-        String texto2[] = texto1.split("@");
-        System.out.println(texto2[0]);
+        return data;
     }
 }

@@ -10,32 +10,30 @@ import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws Exception {
-
-        // Comentário
-        // Fazer uma conexão http
+        //Connection https
         String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
         HttpClient client = HttpClient.newHttpClient();
-        URI endereco = URI.create(url);
-        HttpRequest request = HttpRequest.newBuilder(endereco).GET().build();
+        URI address = URI.create(url);
+        HttpRequest request = HttpRequest.newBuilder(address).GET().build();
         HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
         String body = response.body();
 
-        // Pegar dados (Titulo, poster, nota)
+        // Catch data (title, poster, nota)
         var parser = new JsonParser();
-        List<Map<String, String>> listaFilmes = parser.parse(body);
+        List<Map<String, String>> filmList = parser.parse(body);
         
-        var geradora = new GeradoraFigurinhas();
-        //Exibir e manipular dados
-        for (Map<String,String> filme : listaFilmes) {
+        var generator = new StickerGenerator();
+        //Show and manipulate data
+        for (Map<String,String> film : filmList) {
             
-            String urlImagem = filme.get("image");
-            String titulo = filme.get("title");
-            InputStream inputStream = new URL(urlImagem).openStream();        
-            String nomeArquivo = titulo + ".png";
+            String urlImage= film.get("image");
+            String title = film.get("title");
+            InputStream inputStream = new URL(urlImage).openStream();        
+            String fileName = title + ".png";
 
-            geradora.criar(inputStream, nomeArquivo);
+            generator.generate(inputStream, fileName);
             
-            System.out.println(titulo);
+            System.out.println(title);
             System.out.println();
         }
 

@@ -7,33 +7,33 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 
-public class GeradoraFigurinhas {
-    public void criar(InputStream inputStream, String nomeArquivo) throws Exception{
-        //leitura da imagem
+public class StickerGenerator {
+    public void generate(InputStream inputStream, String fileName) throws Exception{
+        //Read image
         //InputStream inputStream = new FileInputStream(new File("entrada/imagem.jpg"));
         //InputStream inputStream = new URL("https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies_1.jpg").openStream();
-        BufferedImage imagemOriginal = ImageIO.read(inputStream);
+        BufferedImage originalImage = ImageIO.read(inputStream);
 
-        // cria nova imagem em memória com transparencia e com tamanho novo
-        int largura = imagemOriginal.getWidth();
-        int altura = imagemOriginal.getHeight();
-        int novaAltura = altura + 200;
-        BufferedImage novaImagem = new BufferedImage(largura, novaAltura, BufferedImage.TRANSLUCENT);
+        // Create new image in memory with transparency and new size
+        int width = originalImage.getWidth();
+        int height = originalImage.getHeight();
+        int newHeight = height + 200;
+        BufferedImage newImage = new BufferedImage(width, newHeight, BufferedImage.TRANSLUCENT);
 
-        // copiar imagem original para novo imagem
-        Graphics2D graphics = (Graphics2D) novaImagem.getGraphics();
-        graphics.drawImage(imagemOriginal, 0, 0,null);
+        // Copy and change original image to new image
+        Graphics2D graphics = (Graphics2D) newImage.getGraphics();
+        graphics.drawImage(originalImage, 0, 0,null);
         
-        // configurar a fonte
-        var fonte = new Font(Font.SANS_SERIF, Font.BOLD, 64);
+        // Font config
+        var font = new Font(Font.SANS_SERIF, Font.BOLD, 64);
         graphics.setColor(Color.CYAN);
-        graphics.setFont(fonte);
+        graphics.setFont(font);
 
-        // escrever uma frase na nova imagem
-        graphics.drawString("GobKiller", 100, novaAltura - 100);
+        // Writes new line on the new image 
+        graphics.drawString("GobKiller", 100, newHeight - 100);
 
-        // escrever a imagem em um arquivo
-        ImageIO.write(novaImagem, "png", new File("saida/" + nomeArquivo));
+        // Write the image to a new file
+        ImageIO.write(newImage, "png", new File("saida/" + fileName));
     }
 
     public void gerarMemeChaCaindo(String garota, String bule, String xicara, String chao, String nomeMeme) throws Exception{
@@ -66,7 +66,7 @@ public class GeradoraFigurinhas {
     }
 
     public static void main(String[] args) throws Exception {
-        var gerador = new GeradoraFigurinhas();
+        var gerador = new StickerGenerator();
         gerador.gerarMemeChaCaindo( "Eu", 
                                     "Aula 2", 
                                     "Fazer Figurinha", 

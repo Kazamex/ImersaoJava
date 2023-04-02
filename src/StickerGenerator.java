@@ -8,16 +8,19 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 public class StickerGenerator {
-    public void generate(InputStream inputStream, String fileName, String directory) throws Exception{
+    public void generate(InputStream inputStream, String fileName, String directory, String itemName) throws Exception{
         //Read image
         //InputStream inputStream = new FileInputStream(new File("entrada/imagem.jpg"));
         //InputStream inputStream = new URL("https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies_1.jpg").openStream();
         BufferedImage originalImage = ImageIO.read(inputStream);
 
+        int fontSize = 64;
+        int extraHeight = 200;
+
         // Create new image in memory with transparency and new size
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
-        int newHeight = height + 200;
+        int newHeight = height + extraHeight;
         BufferedImage newImage = new BufferedImage(width, newHeight, BufferedImage.TRANSLUCENT);
 
         // Copy and change original image to new image
@@ -25,12 +28,13 @@ public class StickerGenerator {
         graphics.drawImage(originalImage, 0, 0,null);
         
         // Font config
-        var font = new Font(Font.SANS_SERIF, Font.BOLD, 64);
+        var font = new Font(Font.SANS_SERIF, Font.BOLD, fontSize);
         graphics.setColor(Color.CYAN);
         graphics.setFont(font);
 
         // Writes new line on the new image 
-        graphics.drawString("Text", 100, newHeight - 100);
+        int subractHeight = (extraHeight / 2) - (fontSize / 2); 
+        graphics.drawString(itemName, (width/2) - ((fontSize * itemName.length())/4 )  , newHeight - subractHeight);
 
         // Write the image to a new file
         ImageIO.write(newImage, "png", new File(directory + fileName));

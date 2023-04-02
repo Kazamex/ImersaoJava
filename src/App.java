@@ -48,7 +48,7 @@ public class App {
             String urlImage= movie.get("image");
             InputStream inputStream = new URL(urlImage).openStream();        
             String fileName = title + "TopMovie.png";
-            generator.generate(inputStream, fileName, directoryString);
+            generator.generate(inputStream, fileName, directoryString, title);
         }
 
         //Top Series
@@ -74,7 +74,7 @@ public class App {
             String urlImage= tvSerie.get("image");
             InputStream inputStream = new URL(urlImage).openStream();        
             String fileName = title + "TopTvSerie.png";
-            generator.generate(inputStream, fileName, directoryString);
+            generator.generate(inputStream, fileName, directoryString, title);
         }
 
         directoryString = "saida/PopularTVSeries/";
@@ -100,7 +100,7 @@ public class App {
             String urlImage= tvSerie.get("image");
             InputStream inputStream = new URL(urlImage).openStream();        
             String fileName = title + "PopularTvSerie.png";
-            generator.generate(inputStream, fileName, directoryString);
+            generator.generate(inputStream, fileName, directoryString, title);
         }
     }
 

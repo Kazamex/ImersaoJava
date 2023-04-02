@@ -30,7 +30,7 @@ public class StickerGenerator {
         graphics.setFont(font);
 
         // Writes new line on the new image 
-        graphics.drawString("GobKiller", 100, newHeight - 100);
+        graphics.drawString("Text", 100, newHeight - 100);
 
         // Write the image to a new file
         ImageIO.write(newImage, "png", new File("saida/" + fileName));

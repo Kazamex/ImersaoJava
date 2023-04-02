@@ -11,31 +11,68 @@ import java.util.Map;
 public class App {
     public static void main(String[] args) throws Exception {
         //Connection https
-        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+        String urlTopMovies = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+        URI address = URI.create(urlTopMovies);
         HttpClient client = HttpClient.newHttpClient();
-        URI address = URI.create(url);
         HttpRequest request = HttpRequest.newBuilder(address).GET().build();
         HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
         String body = response.body();
 
-        // Catch data (title, poster, nota)
-        var parser = new JsonParser();
-        List<Map<String, String>> filmList = parser.parse(body);
-        
+        // Catch data (title, poster, rate)
         var generator = new StickerGenerator();
-        //Show and manipulate data
-        for (Map<String,String> film : filmList) {
-            
-            String urlImage= film.get("image");
-            String title = film.get("title");
-            InputStream inputStream = new URL(urlImage).openStream();        
-            String fileName = title + ".png";
+        var parser = new JsonParser();
+        List<Map<String, String>> movieList = parser.parse(body);
 
+        //Show and manipulate data Top Movies
+        for (Map<String,String> movie : movieList) {    
+            String urlImage= movie.get("image");
+            String title = movie.get("title");
+            InputStream inputStream = new URL(urlImage).openStream();        
+            String fileName = title + "TopMovie.png";
             generator.generate(inputStream, fileName);
-            
             System.out.println(title);
-            System.out.println();
         }
 
+        //Top Series
+        String urlTopTVSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopTVs.json";
+        address = URI.create(urlTopTVSeries);
+        client = HttpClient.newHttpClient();
+        request = HttpRequest.newBuilder(address).GET().build();
+        client.send(request, BodyHandlers.ofString());
+        body = response.body();
+        List<Map<String, String>> tvSerieList = parser.parse(body);
+
+        System.out.println();
+        System.out.println("Top TV Series:");
+
+        for (Map<String,String> tvSerie : tvSerieList) {    
+            String urlImage= tvSerie.get("image");
+            String title = tvSerie.get("title");
+            InputStream inputStream = new URL(urlImage).openStream();        
+            String fileName = title + "TopTvSerie.png";
+            generator.generate(inputStream, fileName);
+            System.out.println(title);
+        }
+
+        //Popular Series
+        String urlPopularTVSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularTVs.json";
+        address = URI.create(urlPopularTVSeries);
+        client = HttpClient.newHttpClient();
+        request = HttpRequest.newBuilder(address).GET().build();
+        response = client.send(request, BodyHandlers.ofString());
+        body = response.body();
+        tvSerieList = parser.parse(body);
+
+        System.out.println();
+        System.out.println("Popular TV Series:");
+
+        for (Map<String,String> tvSerie : tvSerieList) {    
+            String urlImage= tvSerie.get("image");
+            String title = tvSerie.get("title");
+            InputStream inputStream = new URL(urlImage).openStream();        
+            String fileName = title + "PopularTvSerie.png";
+            generator.generate(inputStream, fileName);
+            System.out.println(title);
+        }
     }
 }

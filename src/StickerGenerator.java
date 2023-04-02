@@ -8,7 +8,7 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 public class StickerGenerator {
-    public void generate(InputStream inputStream, String fileName) throws Exception{
+    public void generate(InputStream inputStream, String fileName, String directory) throws Exception{
         //Read image
         //InputStream inputStream = new FileInputStream(new File("entrada/imagem.jpg"));
         //InputStream inputStream = new URL("https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies_1.jpg").openStream();
@@ -33,7 +33,7 @@ public class StickerGenerator {
         graphics.drawString("Text", 100, newHeight - 100);
 
         // Write the image to a new file
-        ImageIO.write(newImage, "png", new File("saida/" + fileName));
+        ImageIO.write(newImage, "png", new File(directory + fileName));
     }
 
     public void gerarMemeChaCaindo(String garota, String bule, String xicara, String chao, String nomeMeme) throws Exception{

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.InputStream;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
@@ -14,6 +15,10 @@ public class App {
     private static final String ITALIC_TEXT = "\u001b[3m";
 
     public static void main(String[] args) throws Exception {
+        String directoryString = "saida/";
+        File directory = new File(directoryString);
+        directory.mkdir();
+
         //Connection https
         String urlTopMovies = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
         URI address = URI.create(urlTopMovies);
@@ -28,6 +33,10 @@ public class App {
         int countRanking = 1;
         List<Map<String, String>> movieList = parser.parse(body);
 
+        directoryString = "saida/TopMovies/";
+        directory = new File(directoryString);
+        directory.mkdir();
+
         generateTopic("Top Movies");
         //Show and manipulate data Top Movies
         for (Map<String,String> movie : movieList) {    
@@ -39,7 +48,7 @@ public class App {
             String urlImage= movie.get("image");
             InputStream inputStream = new URL(urlImage).openStream();        
             String fileName = title + "TopMovie.png";
-            generator.generate(inputStream, fileName);
+            generator.generate(inputStream, fileName, directoryString);
         }
 
         //Top Series
@@ -52,6 +61,9 @@ public class App {
         List<Map<String, String>> tvSerieList = parser.parse(body);
         countRanking = 1;
 
+        directoryString = "saida/TopTVSeries/";
+        directory = new File(directoryString);
+        directory.mkdir();
         generateTopic("Top TV Series");
         for (Map<String,String> tvSerie : tvSerieList) {    
             String title = tvSerie.get("title");
@@ -62,9 +74,12 @@ public class App {
             String urlImage= tvSerie.get("image");
             InputStream inputStream = new URL(urlImage).openStream();        
             String fileName = title + "TopTvSerie.png";
-            generator.generate(inputStream, fileName);
+            generator.generate(inputStream, fileName, directoryString);
         }
 
+        directoryString = "saida/PopularTVSeries/";
+        directory = new File(directoryString);
+        directory.mkdir();
         //Popular Series
         countRanking = 1;
         String urlPopularTVSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularTVs.json";
@@ -85,7 +100,7 @@ public class App {
             String urlImage= tvSerie.get("image");
             InputStream inputStream = new URL(urlImage).openStream();        
             String fileName = title + "PopularTvSerie.png";
-            generator.generate(inputStream, fileName);
+            generator.generate(inputStream, fileName, directoryString);
         }
     }
 

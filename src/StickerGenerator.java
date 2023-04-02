@@ -28,7 +28,7 @@ public class StickerGenerator {
         graphics.drawImage(originalImage, 0, 0,null);
         
         // Font config
-        var font = new Font(Font.SANS_SERIF, Font.BOLD, fontSize);
+        var font = new Font("Impact", Font.BOLD, fontSize);
         graphics.setColor(Color.CYAN);
         graphics.setFont(font);
 

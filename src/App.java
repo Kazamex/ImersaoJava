@@ -2,92 +2,72 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 public class App {
     private static final String UNSTYLED_TEXT = "\u001b[0m";
     private static final String BOLD_TEXT = "\u001b[1m";
     private static final String ITALIC_TEXT = "\u001b[3m";
-
+    private static final String DIRECTORY_NASA = "saida/Nasa/";
+    private static final String URL_API_NASA = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/NASA-APOD.json";
+    private static final String DIRECTORY_TOP_MOVIES = "saida/TopMovies/";
+    private static final String URL_API_IMDB_TOP_MOVIES = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+    private static final String DIRECTORY_TOP_TV_SERIES = "saida/TopTVSeries/";
+    private static final String URL_API_IMDB_TOP_TV_SERIES = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopTVs.json";
+    private static final String DIRECTORY_POPULAR_TV_SERIES = "saida/PopularTVSeries/";
+    private static final String URL_API_IMDB_POPULAR_TV_SERIES = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularTVs.json";
+    
     public static void main(String[] args) throws Exception {
-        String directoryString = "saida/";
-        File directory = new File(directoryString);
-        directory.mkdir();
+        createFolder("saida/");
+        var generator = new StickerGenerator();
 
-        //https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/NASA-APOD.json
-
+        //Stickers Nasa
         //Connection https
-        String urlTopMovies = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
         var consumer = new ConsumerClientHttp();
-        String body = consumer.searchData(urlTopMovies);
+        String body = consumer.searchData(URL_API_NASA);
 
         // Catch data (title, poster, rate)
-        var generator = new StickerGenerator();
-        var parser = new JsonParser();
-        int countRanking = 1;
-        List<Map<String, String>> movieList = parser.parse(body);
+        createFolder(DIRECTORY_NASA);
+        var nasaExtractor = new DataExtractorNasa();
+        List<ContentAPI> nasaContents = nasaExtractor.extractContent(body);
+        
+        for (int i=0; i < nasaContents.size(); i++){
+            ContentAPI content = nasaContents.get(i);
+            InputStream inputStream = new URL(content.getUrlImage()).openStream();
+            generator.generate(inputStream, content.getFileName(), DIRECTORY_NASA, content.getTitle());
+        }
 
-        directoryString = "saida/TopMovies/";
-        directory = new File(directoryString);
-        directory.mkdir();
-
-        generateTopic("Top Movies");
         //Show and manipulate data Top Movies
-        for (Map<String,String> movie : movieList) {    
-            String title = movie.get("title");
-            String year = movie.get("year");
-            String rating = movie.get("imDbRating");
-            generateTextItem(title, year, rating, countRanking);
-            countRanking++;
-            String urlImage= movie.get("image");
-            InputStream inputStream = new URL(urlImage).openStream();        
-            String fileName = title + "TopMovie.png";
-            generator.generate(inputStream, fileName, directoryString, title);
+        generateIMDBList(DIRECTORY_TOP_MOVIES,URL_API_IMDB_TOP_MOVIES,"Top Movies");
+        generateIMDBList(DIRECTORY_TOP_TV_SERIES,URL_API_IMDB_TOP_TV_SERIES,"Top TV Series");
+        generateIMDBList(DIRECTORY_POPULAR_TV_SERIES,URL_API_IMDB_POPULAR_TV_SERIES,"Popular TV Series");
+        
+    }
+
+    public static void createFolder(String directory){
+        File fileDirectory = new File(directory);
+        fileDirectory.mkdir();
+    }
+
+    public static void generateIMDBList(String directory, String url, String topicTitle) throws Exception{
+        var consumer = new ConsumerClientHttp();
+        var generator = new StickerGenerator();
+
+        generateTopic(topicTitle);
+        //Show and manipulate data Top Movies
+
+        // Catch data (title, poster, rate)
+        String body = consumer.searchData(url);
+        createFolder(directory);
+        var imdbExtractor = new DataExtractorIMDB();
+        List<ContentAPI> imdbContents = imdbExtractor.extractContent(body);
+
+        for (int i=0; i < imdbContents.size(); i++){
+            ContentAPI content = imdbContents.get(i);
+            generateTextItem(content.getTitle(), content.getYear(), content.getRating(), i+1);
+            InputStream inputStream = new URL(content.getUrlImage()).openStream();
+            generator.generate(inputStream, content.getFileName(), directory, content.getTitle());
         }
 
-        //Top Series
-        String urlTopTVSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopTVs.json";
-        body = consumer.searchData(urlTopTVSeries);
-        List<Map<String, String>> tvSerieList = parser.parse(body);
-        countRanking = 1;
-
-        directoryString = "saida/TopTVSeries/";
-        directory = new File(directoryString);
-        directory.mkdir();
-        generateTopic("Top TV Series");
-        for (Map<String,String> tvSerie : tvSerieList) {    
-            String title = tvSerie.get("title");
-            String year = tvSerie.get("year");
-            String rating = tvSerie.get("imDbRating");
-            generateTextItem(title, year, rating, countRanking);
-            countRanking++;
-            String urlImage= tvSerie.get("image");
-            InputStream inputStream = new URL(urlImage).openStream();        
-            String fileName = title + "TopTvSerie.png";
-            generator.generate(inputStream, fileName, directoryString, title);
-        }
-
-        directoryString = "saida/PopularTVSeries/";
-        directory = new File(directoryString);
-        directory.mkdir();
-        //Popular Series
-        countRanking = 1;
-        String urlPopularTVSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularTVs.json";
-        body = consumer.searchData(urlPopularTVSeries);
-        tvSerieList = parser.parse(body);
-
-        generateTopic("Popular TV Series");
-        for (Map<String,String> tvSerie : tvSerieList) {    
-            String title = tvSerie.get("title");
-            String year = tvSerie.get("year");
-            String rating = tvSerie.get("imDbRating");
-            generateTextItem(title, year, rating, countRanking);
-            countRanking++;
-            String urlImage= tvSerie.get("image");
-            InputStream inputStream = new URL(urlImage).openStream();        
-            String fileName = title + "PopularTvSerie.png";
-            generator.generate(inputStream, fileName, directoryString, title);
-        }
     }
 
     public static void generateTopic(String topic){

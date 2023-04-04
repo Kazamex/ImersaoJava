@@ -1,10 +1,5 @@
 import java.io.File;
 import java.io.InputStream;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
-import java.net.http.HttpRequest;
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +14,12 @@ public class App {
         File directory = new File(directoryString);
         directory.mkdir();
 
+        //https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/NASA-APOD.json
+
         //Connection https
         String urlTopMovies = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
-        URI address = URI.create(urlTopMovies);
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(address).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        String body = response.body();
+        var consumer = new ConsumerClientHttp();
+        String body = consumer.searchData(urlTopMovies);
 
         // Catch data (title, poster, rate)
         var generator = new StickerGenerator();
@@ -53,11 +47,7 @@ public class App {
 
         //Top Series
         String urlTopTVSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopTVs.json";
-        address = URI.create(urlTopTVSeries);
-        client = HttpClient.newHttpClient();
-        request = HttpRequest.newBuilder(address).GET().build();
-        client.send(request, BodyHandlers.ofString());
-        body = response.body();
+        body = consumer.searchData(urlTopTVSeries);
         List<Map<String, String>> tvSerieList = parser.parse(body);
         countRanking = 1;
 
@@ -83,11 +73,7 @@ public class App {
         //Popular Series
         countRanking = 1;
         String urlPopularTVSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularTVs.json";
-        address = URI.create(urlPopularTVSeries);
-        client = HttpClient.newHttpClient();
-        request = HttpRequest.newBuilder(address).GET().build();
-        response = client.send(request, BodyHandlers.ofString());
-        body = response.body();
+        body = consumer.searchData(urlPopularTVSeries);
         tvSerieList = parser.parse(body);
 
         generateTopic("Popular TV Series");

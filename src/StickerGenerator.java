@@ -85,31 +85,31 @@ public class StickerGenerator {
         ImageIO.write(novaImagem, "png", new File("saida/" + nomeMeme + ".png"));
     }
 
-    public static void main(String[] args) throws Exception {
-        var gerador = new StickerGenerator();
-        gerador.gerarMemeChaCaindo( "Eu", 
-                                    "Aula 2", 
-                                    "Fazer Figurinha", 
-                                    "Fazer Meme", 
-                                    "Meme1_Alura");
+    // public static void main(String[] args) throws Exception {
+    //     var gerador = new StickerGenerator();
+    //     gerador.gerarMemeChaCaindo( "Eu", 
+    //                                 "Aula 2", 
+    //                                 "Fazer Figurinha", 
+    //                                 "Fazer Meme", 
+    //                                 "Meme1_Alura");
 
-        gerador.gerarMemeChaCaindo( "", 
-                                    "Eu", 
-                                    "voce, dois filhos", 
-                                    "Um cachorro", 
-                                    "Meme1_Musica");
+    //     gerador.gerarMemeChaCaindo( "", 
+    //                                 "Eu", 
+    //                                 "voce, dois filhos", 
+    //                                 "Um cachorro", 
+    //                                 "Meme1_Musica");
 
-        gerador.gerarMemeChaCaindo( "Eu", 
-                                    "Chá", 
-                                    "Chão", 
-                                    "Bule", 
-                                    "Meme1_Embaralhado");
+    //     gerador.gerarMemeChaCaindo( "Eu", 
+    //                                 "Chá", 
+    //                                 "Chão", 
+    //                                 "Bule", 
+    //                                 "Meme1_Embaralhado");
 
-        gerador.gerarMemeChaCaindo( "Texto1", 
-                                    "Texto2", 
-                                    "Texto3", 
-                                    "Texto4", 
-                                    "Meme1_Default");
+    //     gerador.gerarMemeChaCaindo( "Texto1", 
+    //                                 "Texto2", 
+    //                                 "Texto3", 
+    //                                 "Texto4", 
+    //                                 "Meme1_Default");
         
-    }
+    // }
 }
